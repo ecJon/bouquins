@@ -1,0 +1,10 @@
+{
+	"name" : "bouquins",
+	"description" : "HTTP frontend for calibre",
+	"url" : "TODO",
+	"author" : "Meutel <meutel@meutel.net>",
+	"dependencies" : {},
+	"main" : "./lib/bouquins",
+	"bin" : { "bootstrap" : "./bin/bootstrap" },
+	"version" : "0.1.0"
+}
