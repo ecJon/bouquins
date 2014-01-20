@@ -1,3 +1,7 @@
 {
-	"httpPort":8080
+	"httpPort":8080,
+	"debugLevel":"debug",
+	"endpoints": {
+		"library":"endpoint/library.js"
+	}
 }
