@@ -3,5 +3,6 @@
 	"debugLevel":"debug",
 	"endpoints": {
 		"library":"endpoint/library.js"
-	}
+	},
+	"urlPrefix": "http://127.0.0.1:8080/bouquins"
 }
