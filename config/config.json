@@ -2,7 +2,8 @@
 	"httpPort":8080,
 	"debugLevel":"debug",
 	"endpoints": {
-		"library":"endpoint/library.js"
+		"library":"endpoint/library.js",
+		"author":"endpoint/author.js"
 	},
 	"urlPrefix": "http://127.0.0.1:8080/bouquins"
 }
