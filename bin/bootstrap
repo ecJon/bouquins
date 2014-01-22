@@ -27,15 +27,24 @@ bouquins.loadconfig(configfile, function(err, config) {
 	GLOBAL.config = config;
 	// global logger
 	GLOBAL.logger = bouquins.initLogger();
-	start(config);
+	logger.debug(config);
+	// database
+	bouquins.initDB(function(err) {
+		if (err) {
+			logger.error('Fatal error, cannot load database: ' + err);
+			logger.error(err.stack);
+			process.exit(1);
+		}
+	});
+	start();
 });
 
 /**
  * Initialise application
  */
-function start(config){
+function start(){
 	logger.info('Starting '+APP_NAME);
-	
+
 	var starReqListener=function(req, res) {
 		// defaut request listener
 		res.writeHead(200, {'Content-Type': 'text/plain'});
