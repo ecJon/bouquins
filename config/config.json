@@ -3,8 +3,9 @@
 	"debugLevel":"debug",
 	"endpoints": {
 		"library":"endpoint/library.js",
+		"book":"endpoint/book.js",
 		"author":"endpoint/author.js"
 	},
-	"urlPrefix": "http://127.0.0.1:8080/bouquins",
+	"urlPrefix": "http://127.0.0.1:8080",
 	"dbfile": "/home/meutel/metadata.db"
 }
