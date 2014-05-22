@@ -4,10 +4,18 @@
 	"url" : "TODO",
 	"author" : "Meutel <meutel@meutel.net>",
 	"private" : true,
-	"dependencies" : {
-		"express": "3.x"
+	"dependencies": {
+		"express": "~4.0.0",
+		"static-favicon": "~1.0.0",
+		"morgan": "~1.0.0",
+		"cookie-parser": "~1.0.1",
+		"body-parser": "~1.0.0",
+		"debug": "~0.7.4",
+		"jade": "~1.3.0",
+		"sqlite3": "~2.2.0"
 	},
-	"main" : "./lib/bouquins",
-	"bin" : { "bootstrap" : "./bin/bootstrap" },
+	"scripts": {
+		"start": "nodejs ./bin/www"
+	},
 	"version" : "0.1.0"
 }

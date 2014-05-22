@@ -1,5 +1,0 @@
-{
-	"httpPort":8080,
-	"debugLevel":"debug",
-	"dbfile": "/home/meutel/metadata.db"
-}
