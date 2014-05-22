@@ -1,13 +1,5 @@
 {
 	"httpPort":8080,
 	"debugLevel":"debug",
-	"endpoints": {
-		"library":"endpoint/library.js",
-		"book":"endpoint/book.js",
-		"author":"endpoint/author.js",
-		"serie":"endpoint/serie.js",
-		"tag":"endpoint/tag.js"
-	},
-	"urlPrefix": "http://127.0.0.1:8080",
 	"dbfile": "/home/meutel/metadata.db"
 }
