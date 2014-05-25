@@ -1,16 +1,19 @@
 var express = require('express');
 var router = express.Router();
+var paginate = require('../util/paginate');
 
 /* All authors */
 router.get('/', function(req, res) {
-  var query = 'SELECT * FROM authors ';
-  query += ' LIMIT ? OFFSET ?';
+  var query = 'SELECT * FROM authors LIMIT ? OFFSET ?';
   var authors = new Array();
-  var perpage = req.query.perpage;
-  perpage = perpage ? perpage : 10;
-  req.db.each(query, perpage, 0, function (err, row) {
-    authors.push(row);
+  req.paginate = new paginate(req);
+  req.db.each(query, req.paginate.perpage + 1, req.paginate.offset, function (err, row) {
+	if (authors.length < req.paginate.perpage)
+		authors.push(row);
+	else
+		req.paginate.hasNext = true;
   }, function(err) {
+	res.links(req.paginate.links());
 	res.json(authors);
   });
 });
