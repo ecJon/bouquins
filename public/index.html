@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bouquins</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+	  <div class="jumbotron">
+		  <h1>Bibliothèque</h1>
+		  <p>Naviguez dans la bibliothèque.</p>
+		  <p>
+		  <a id="book" class="btn btn-primary btn-lg" role="button">Livres</a>
+		  <a id="author" class="btn btn-primary btn-lg" role="button">Auteurs</a>
+		  <a id="serie" class="btn btn-primary btn-lg" role="button">Series</a>
+		  </p>
+	  </div>
+	<div class="container-fluid">
+		<ul class="pager">
+			<li class="disabled"><a id="prev" href="#">Previous</a></li>
+			<li class="disabled"><a id="next" href="#">Next</a></li>
+		</ul>
+		<table id="items" class="table table-striped">
+			<tr><td>Empty</td></tr>
+		</table>
+		<div class="row">
+			<div class="col-xs-6"> <p>Elements per page: </p> </div>
+			<div class="col-xs-6">
+				<select id="perpage" >
+					<option value="10">10</option>
+					<option value="20">20</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/purl.js"></script>
+<script>
+var url;
+var links;
+var cols;
+var urlp={};
+$('#book').click(function() {
+	cols = [ 'title' ];
+});
+$('#author').click(function() {
+	cols = [ 'name' ];
+});
+$('#serie').click(function() {
+	cols = [ 'name' ];
+});
+$.each(['book','author','serie'], function (i, elt) {
+	$('#'+elt).click(function() {
+		url = '/'+elt;
+		loadItems();
+	});
+});
+$.each(['prev','next'], function (i, elt) {
+	$('#'+elt).click(function() {
+		var parsed = $.url(links[elt]);
+		url = parsed.attr('path');
+		urlp = parsed.param();
+		loadItems();
+	});
+});
+$("#perpage").change(function() {
+	$( "#perpage option:selected" ).each(function() {
+		urlp.perpage = $(this).text();
+		urlp.page = 0;
+		loadItems();
+	});
+});
+
+function loadItems() {
+	$.getJSON( url, urlp, function( data, textStatus, xhr ) {
+		$('#items').empty();
+		var items = [];
+		$.each( data, function(i, elt ) {
+			var item = "<tr id='" + elt.id + "'>";
+			$.each(cols, function(icol, col) {
+				item+="<td>"+elt[col]+"</td>";
+			});
+			item += "</tr>";
+			items.push(item);
+		});
+		$('#items').append(items.join(""));
+
+		var linkHeader = xhr.getResponseHeader('link');
+		links = parse_link_header(linkHeader);
+		$.each(['prev','next'], function (i, elt) {
+			var btn = $('#'+elt);
+			if (links[elt]) {
+				btn.parent().removeClass('disabled');
+			} else {
+				btn.parent().addClass('disabled');
+			}
+		});
+	});
+}
+/*
+* parse_link_header()
+*
+* Parse the Github Link HTTP header used for pageination
+* http://developer.github.com/v3/#pagination
+*/
+function parse_link_header(header) {
+	if (header.length == 0) {
+		throw new Error("input must not be of zero length");
+	}
+ 
+	// Split parts by comma
+	var parts = header.split(',');
+	var links = {};
+	// Parse each part into a named link
+	$.each(parts, function(i, p) {
+		var section = p.split(';');
+		if (section.length != 2) {
+			throw new Error("section could not be split on ';'");
+		}
+		var url = section[0].replace(/<(.*)>/, '$1').trim();
+		var name = section[1].replace(/rel="(.*)"/, '$1').trim();
+		links[name] = url;
+	});
+
+	return links;
+}
+</script>
+  </body>
+</html>
+
