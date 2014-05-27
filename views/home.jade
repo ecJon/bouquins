@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  div.jumbotron
+    h1= title
+    p Naviguez dans la bibliothèque.
+    p
+      a#book.btn.btn-primary.btn-lg(role="button") Livres
+      &nbsp;
+      a#author.btn.btn-primary.btn-lg(role="button") Auteurs
+      &nbsp;
+      a#serie.btn.btn-primary.btn-lg(role="button") Series
+  div.container-fluid
+    ul.pager
+      li.previous.disabled: a#prev Précédent
+      each p in [10,20,50,100]
+        li: button.btn.btn-link.perpage(type="button",value=p)= p
+      li.next.disabled: a#next Suivant
+    table#items.table.table-striped
+      tr: td.disabled Vide
+  script(src="js/jquery.min.js")
+  script(src="js/bootstrap.min.js")
+  script(src="js/purl.js")
+  script(src="js/home.js")

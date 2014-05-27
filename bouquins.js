@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sqlite3 = require('sqlite3').verbose();
 
-var routes = require('./routes/index');
+var home = require('./routes/home');
 var author = require('./routes/author');
 var book = require('./routes/book');
 var tag = require('./routes/tag');
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/', home);
 app.use('/author', author);
 app.use('/book', book);
 app.use('/tag', tag);
