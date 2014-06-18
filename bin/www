@@ -1,4 +1,4 @@
-#!/usr/bin/nodejs
+#!/usr/bin/node
 var debug = require('debug')('bouquins');
 var app = require('../bouquins');
 
