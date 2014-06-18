@@ -38,7 +38,7 @@ function loadItems() {
 		$.each( data, function(i, elt ) {
 			var item = "<tr id='" + elt.id + "'>";
 			$.each(cols, function(icol, col) {
-				item+="<td>"+elt[col]+"</td>";
+				item+="<td><a href=\""+url+"/"+elt.id+"\">"+elt[col]+"</a></td>";
 			});
 			item += "</tr>";
 			items.push(item);

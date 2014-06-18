@@ -21,7 +21,15 @@ router.get('/', function(req, res) {
 /* Single author */
 router.get('/:id', function(req, res) {
 	req.db.get('SELECT * FROM authors WHERE id = ?', req.params.id, function(err, row) {
-		res.json(row);
+		res.format({
+			html: function(){
+				row.title = row.name;
+				res.render('author', row);
+			},
+			json: function(){
+				res.json(row);
+			}
+		});
 	});
 });
 

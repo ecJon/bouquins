@@ -21,7 +21,15 @@ router.get('/', function(req, res) {
 /* Single serie */
 router.get('/:id', function(req, res) {
 	req.db.get('SELECT * FROM series WHERE id = ?', req.params.id, function(err, row) {
-		res.json(row);
+		res.format({
+			html: function(){
+				row.title = row.name;
+				res.render('serie', row);
+			},
+			json: function(){
+				res.json(row);
+			}
+		});
 	});
 });
 

@@ -21,7 +21,14 @@ router.get('/', function(req, res) {
 /* Single book */
 router.get('/:id', function(req, res) {
 	req.db.get('SELECT * FROM books WHERE id = ?', req.params.id, function(err, row) {
-		res.json(row);
+		res.format({
+			html: function(){
+				res.render('book', row);
+			},
+			json: function(){
+				res.json(row);
+			}
+		});
 	});
 });
 
