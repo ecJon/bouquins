@@ -1,15 +1,58 @@
 var url;
 var links;
 var cols;
+var headers;
 var urlp={};
+function link(content, href, glyph) {
+	var link="";
+	if (content) {
+		if (glyph) link+="<span class=\"glyphicon "+glyph+"\"></span>&nbsp;";
+		link += "<a href=\""+href+"\">";
+		link+=content+"</a>";
+	}
+	return link;
+}
 $('#book').click(function() {
-	cols = [ 'title', 'author_sort' ];
+	headers = ['Titre', 'Auteur(s)', 'Serie'];
+	cols = [
+		function(elt) {
+			return link(elt.title, '/book/'+elt.id, 'glyphicon-book');
+		}, function(elt) {
+			var links="";
+			if (Array.isArray(elt.authors)) {
+				$.each(elt.authors, function(ida, author) {
+					links+=link(author.name, '/author/'+author.id,'glyphicon-user');
+				});
+			}
+			return links;
+		}, function(elt) {
+			return link(elt.series_name, '/serie/'+elt.id, 'glyphicon-list');
+		}
+	];
 });
 $('#author').click(function() {
-	cols = [ 'name' ];
+	headers = ['Nom', 'Livres'];
+	cols = [ function(elt){
+		return link(elt.name, '/author/'+elt.id,'glyphicon-user');
+	}, function(elt) { return elt.count; } ];
 });
 $('#serie').click(function() {
-	cols = [ 'name' ];
+	headers = ['Nom', 'Auteur(s)', 'Livres'];
+	cols = [
+		function(elt) {
+			return link(elt.name, '/serie/'+elt.id, 'glyphicon-list');
+		}, function(elt) {
+			var links="";
+			if (Array.isArray(elt.authors)) {
+				$.each(elt.authors, function(ida, author) {
+					links+=link(author.name, '/author/'+author.id,'glyphicon-user');
+				});
+			}
+			return links;
+		}, function(elt) {
+			return elt.count;
+		}
+	];
 });
 $.each(['book','author','serie'], function (i, elt) {
 	$('#'+elt).click(function() {
@@ -33,17 +76,22 @@ $(".perpage").click(function() {
 
 function loadItems() {
 	$.getJSON( url, urlp, function( data, textStatus, xhr ) {
-		$('#items').empty();
-		var items = [];
+		var items = $('#items');
+		items.empty();
+		var item = "<tr>";
+		$.each(headers, function(ih, h) {
+			item+="<th>"+h+"</th>";
+		});
+		item += "</tr>";
+		items.append(item);
 		$.each( data, function(i, elt ) {
 			var item = "<tr id='" + elt.id + "'>";
 			$.each(cols, function(icol, col) {
-				item+="<td><a href=\""+url+"/"+elt.id+"\">"+elt[col]+"</a></td>";
+				item+="<td>"+col(elt)+"</td>";
 			});
 			item += "</tr>";
-			items.push(item);
+			items.append(item);
 		});
-		$('#items').append(items.join(""));
 
 		var linkHeader = xhr.getResponseHeader('link');
 		links = parse_link_header(linkHeader);
