@@ -26,7 +26,8 @@ $('#book').click(function() {
 			}
 			return links;
 		}, function(elt) {
-			return link(elt.series_name, '/serie/'+elt.id, 'glyphicon-list');
+			var content = elt.series_name == null ? '' : elt.series_name + '(' + elt.series_index + ')';
+			return link(content, '/serie/'+elt.id, 'glyphicon-list');
 		}
 	];
 });

@@ -26,23 +26,79 @@ router.get('/', function(req, res) {
 		book.authors.push(author);
 	}, function(err) {
 		if (err) console.log(err);
-		res.json(books.values());
+		res.format({
+			html: function(){
+				//TODO load items in home page
+				res.render('home', books.values());
+			},
+			json: function(){
+				res.json(books.values());
+			}
+		});
 	});
   });
 });
 
 /* Single book */
 router.get('/:id', function(req, res) {
-	req.db.get('SELECT * FROM books WHERE id = ?', req.params.id, function(err, row) {
-		res.format({
-			html: function(){
-				res.render('book', row);
-			},
-			json: function(){
-				res.json(row);
-			}
-		});
-	});
+	var book, authors, tags;
+	var queries = 3;
+	var callback = function() {
+		if (queries == 0) {
+			book.authors = authors;
+			book.tags = tags;
+			res.format({
+				html: function(){
+					res.render('book', book);
+				},
+				json: function(){
+					res.json(book);
+				}
+			});
+		}
+	};
+	// book
+	req.db.get('SELECT books.id AS id,title,timestamp,pubdate,series_index,isbn,lccn,path,uuid,has_cover,' +
+		'languages.lang_code,format,uncompressed_size,data.name AS data_name,series.name AS series_name' +
+		' FROM books ' +
+		' LEFT OUTER JOIN books_languages_link ON books_languages_link.book = books.id ' +
+		' LEFT OUTER JOIN languages ON languages.id = books_languages_link.lang_code ' +
+		' LEFT OUTER JOIN data ON data.book = books.id ' +
+		' LEFT OUTER JOIN books_series_link ON books.id = books_series_link.book ' +
+		' LEFT OUTER JOIN series ON series.id = books_series_link.series ' +
+		' WHERE books.id = ?', req.params.id,
+		function(err, row) {
+			if (err) console.log(err);
+			book = row;
+			queries--;
+			callback();
+		}
+	);
+	// authors
+	authors = new Array();
+	req.db.each('SELECT authors.id as id,name FROM authors, books_authors_link WHERE books_authors_link.author = authors.id AND books_authors_link.book = ?', req.params.id,
+		function(err, author) {
+			authors.push(author);
+		},
+		function(err) {
+			if (err) console.log(err);
+			queries--;
+			callback();
+		}
+	);
+	// tags
+	tags = new Array();
+	req.db.each('SELECT tags.id as id,name FROM tags, books_tags_link WHERE books_tags_link.tag = tags.id AND books_tags_link.book = ?', req.params.id,
+		function(err, tag) {
+			tags.push(tag);
+		},
+		function(err) {
+			if (err) console.log(err);
+			queries--;
+			callback();
+		}
+	);
 });
+
 
 module.exports = router;
