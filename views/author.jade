@@ -1,5 +1,33 @@
 extends layout
 
 block content
- h1 Auteur
- h2= name
+  ol.breadcrumb
+    li
+      a(href="/") Home
+    li
+      a(href="/author") Auteurs
+    li.active= title
+  div.container
+    div.page-header
+      h1
+        span.glyphicon.glyphicon-user
+        = ' '+name
+    h2
+      span.glyphicon.glyphicon-book
+      |  Livres
+    ul
+      each book in books
+        li
+          a(href='/book/'+book.id)
+            = book.title+' '
+          if book.series_name
+            span.glyphicon.glyphicon-list
+            a(href='/serie/'+book.series_id)
+              = ' '+book.series_name+' ('+book.series_index+')'
+    if coauthors.length > 0
+      h2
+        span.glyphicon.glyphicon-user
+        |  Co-Auteur(s)
+      ul
+        each author in coauthors
+          li: a(href='/author/'+author.id)= author.name

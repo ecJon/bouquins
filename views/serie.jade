@@ -1,5 +1,30 @@
-extend layout
+extends layout
 
 block content
- h1 Serie
- h2= name
+  ol.breadcrumb
+    li
+      a(href="/") Home
+    li
+      a(href="/serie") Series
+    li.active= title
+  div.container
+    div.page-header
+      h1
+        span.glyphicon.glyphicon-list
+        = ' '+name
+    h2
+      span.glyphicon.glyphicon-book
+      |  Livres
+    ul
+      each book in books
+        li
+          = book.series_index+'. '
+          a(href='/book/'+book.id)
+            = book.title
+    if authors.length > 0
+      h2
+        span.glyphicon.glyphicon-user
+        |  Auteur(s)
+      ul
+        each author in authors
+          li: a(href='/author/'+author.id)= author.name

@@ -33,17 +33,62 @@ router.get('/', function(req, res) {
 
 /* Single serie */
 router.get('/:id', function(req, res) {
+	var nbq = 3;
+	var serie;
+	var books = new Array();
+	var authors = new Array();
+	var respond = function() {
+		if (nbq==0) {
+			serie.books = books;
+			serie.authors = authors;
+			res.format({
+				html: function(){
+					serie.title = serie.name;
+					res.render('serie', serie);
+				},
+				json: function(){
+					res.json(serie);
+				}
+			});
+		}
+	};
 	req.db.get('SELECT * FROM series WHERE id = ?', req.params.id, function(err, row) {
-		res.format({
-			html: function(){
-				row.title = row.name;
-				res.render('serie', row);
-			},
-			json: function(){
-				res.json(row);
-			}
-		});
+		if (err) console.log(err);
+		serie = row;
+		nbq--;
+		respond();
 	});
+	var booksIds = new Array();
+	req.db.each('SELECT books.id AS id,title,series_index'+
+		' FROM books'+
+		' LEFT OUTER JOIN books_series_link ON books_series_link.book = books.id'+
+		' WHERE books_series_link.series = ?'+
+		' ORDER BY series_index', req.params.id, 
+		function(err, book) {
+			books.push(book);
+			booksIds.push(book.id);
+		},
+		function(err) {
+			if (err) console.log(err);
+			nbq--;
+			var autq = 'SELECT DISTINCT authors.name AS name, authors.id AS id'+
+				' FROM authors'+
+				' LEFT OUTER JOIN books_authors_link ON books_authors_link.author = authors.id'+
+				' WHERE books_authors_link.book IN (';
+			for (var i=0;i<booksIds.length-1;i++) autq+='?,';
+			autq+='?)';
+			req.db.each(autq, booksIds,
+				function(err, author) {
+					authors.push(author);
+				},
+				function(err) {
+					if (err) console.log(err);
+					nbq--;
+					respond();
+				}
+			);
+		}
+	);
 });
 
 module.exports = router;

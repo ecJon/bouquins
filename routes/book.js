@@ -5,7 +5,7 @@ var HashMap = require('hashmap').HashMap;
 
 /* All books */
 router.get('/', function(req, res) {
-   var query = 'SELECT books.id as id,title,series_index,name as series_name FROM books LEFT OUTER JOIN books_series_link ON books.id = books_series_link.book LEFT OUTER JOIN series ON series.id = books_series_link.series ORDER BY books.sort LIMIT ? OFFSET ?';
+   var query = 'SELECT books.id as id,title,series_index,name as series_name,series.id AS series_id FROM books LEFT OUTER JOIN books_series_link ON books.id = books_series_link.book LEFT OUTER JOIN series ON series.id = books_series_link.series ORDER BY books.sort LIMIT ? OFFSET ?';
   var books = new HashMap();
   req.paginate = new paginate(req);
   req.db.each(query, req.paginate.perpage + 1, req.paginate.offset, function (err, book) {
@@ -59,8 +59,8 @@ router.get('/:id', function(req, res) {
 	};
 	// book
 	req.db.get('SELECT books.id AS id,title,timestamp,pubdate,series_index,isbn,lccn,path,uuid,has_cover,' +
-		'languages.lang_code,format,uncompressed_size,data.name AS data_name,series.name AS series_name' +
-		' FROM books ' +
+		'languages.lang_code,format,uncompressed_size,data.name AS data_name,series.name AS series_name,' +
+		'series.id AS series_id FROM books ' +
 		' LEFT OUTER JOIN books_languages_link ON books_languages_link.book = books.id ' +
 		' LEFT OUTER JOIN languages ON languages.id = books_languages_link.lang_code ' +
 		' LEFT OUTER JOIN data ON data.book = books.id ' +
@@ -68,7 +68,7 @@ router.get('/:id', function(req, res) {
 		' LEFT OUTER JOIN series ON series.id = books_series_link.series ' +
 		' WHERE books.id = ?', req.params.id,
 		function(err, row) {
-			if (err) console.log(err);
+			if (err) console.log('ERR book: '+err);
 			book = row;
 			queries--;
 			callback();
@@ -81,7 +81,7 @@ router.get('/:id', function(req, res) {
 			authors.push(author);
 		},
 		function(err) {
-			if (err) console.log(err);
+			if (err) console.log('ERR authors: '+err);
 			queries--;
 			callback();
 		}
@@ -93,7 +93,7 @@ router.get('/:id', function(req, res) {
 			tags.push(tag);
 		},
 		function(err) {
-			if (err) console.log(err);
+			if (err) console.log('ERR tags: '+err);
 			queries--;
 			callback();
 		}
