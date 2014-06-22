@@ -57,6 +57,7 @@ $('#serie').click(function() {
 });
 $.each(['book','author','serie'], function (i, elt) {
 	$('#'+elt).click(function() {
+		window.location.hash=elt='s';
 		url = '/'+elt;
 		loadItems();
 	});

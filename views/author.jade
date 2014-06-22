@@ -20,11 +20,18 @@ block content
         li
           a(href='/book/'+book.id)
             = book.title+' '
-          if book.series_name
+          if book.serie
             span.glyphicon.glyphicon-list
-            a(href='/serie/'+book.series_id)
-              = ' '+book.series_name+' ('+book.series_index+')'
-    if coauthors.length > 0
+            a(href='/serie/'+book.serie.id)
+              = ' '+book.serie.name+' ('+book.series_index+')'
+    if series
+      h2
+        span.glyphicon.glyphicon-list
+        |  Series
+      ul
+        each serie in series
+          li: a(href='/serie/'+serie.id)= ' '+serie.name
+    if coauthors
       h2
         span.glyphicon.glyphicon-user
         |  Co-Auteur(s)
