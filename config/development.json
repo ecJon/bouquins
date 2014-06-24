@@ -1,0 +1,5 @@
+{
+	"calibre_path": "./public/calibre",
+	"calibre_db_path": "./public/calibre/metadata.db",
+	"trust proxy": true
+}

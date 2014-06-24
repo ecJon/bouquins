@@ -20,7 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // load config
-_.extend(app.locals, require('./'+app.get('env')+'.json'));
+_.extend(app.locals, require('./config/'+app.get('env')+'.json'));
 
 // nginx
 app.enable('trust proxy');
