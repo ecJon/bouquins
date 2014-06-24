@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sqlite3 = require('sqlite3').verbose();
+var _ = require('underscore');
 
 var home = require('./routes/home');
 var author = require('./routes/author');
@@ -18,8 +19,16 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// load config
+_.extend(app.locals, require('./'+app.get('env')+'.json'));
+
+// nginx
+app.enable('trust proxy');
+
 // db setup
-var db = new sqlite3.Database('/home/meutel/metadata.db');
+var dbPath = app.locals.calibre_db_path;
+console.log('Database: ' + dbPath);
+var db = new sqlite3.Database(dbPath);
 
 app.use(function(req, res, next) {
 	req.db = db;
@@ -32,6 +41,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/calibre', express.static(app.locals.calibre_path));
 
 app.use('/', home);
 app.use('/author', author);
