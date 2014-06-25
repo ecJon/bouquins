@@ -119,6 +119,7 @@ $.extend(HomePage.prototype,{
 			} else {
 				btn.parent().addClass('disabled');
 			}
+			btn.unbind();
 			btn.click(function() {
 				var parsed = $.url(links[elt]);
 				var urlp = parsed.param();
