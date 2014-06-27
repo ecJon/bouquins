@@ -81,6 +81,21 @@ var HomePage = function() {
 	});
 	$(".perpage").click(function() {
 		home.pagination.perpage = $(this).attr("value");
+		$('.perpage').removeClass('active');
+		$(this).addClass('active');
+		home.pagination.page = 0;
+		if (home.current)
+			home.current.load();
+	});
+	$(".initial").click(function() {
+		if ($(this).hasClass('active')) {
+			home.pagination.initial = null;
+			$('.initial').removeClass('active');
+		} else {
+			home.pagination.initial = $(this).attr("value");
+			$('.initial').removeClass('active');
+			$(this).addClass('active');
+		}
 		home.pagination.page = 0;
 		if (home.current)
 			home.current.load();
@@ -113,7 +128,7 @@ $.extend(HomePage.prototype,{
 	},
 	updatePager: function(links) {
 		$.each(['prev','next'], function (i, elt) {
-			var btn = $('#'+elt);
+			var btn = $('.'+elt);
 			if (links[elt]) {
 				btn.parent().removeClass('disabled');
 			} else {

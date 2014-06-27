@@ -5,19 +5,39 @@ var HashMap = require('hashmap').HashMap;
 
 /* All authors */
 router.get('/', function(req, res) {
-  var query = 'SELECT authors.id as id,name,count(*) as count FROM authors,books_authors_link WHERE authors.id = books_authors_link.author GROUP BY books_authors_link.author ORDER BY sort LIMIT ? OFFSET ?';
-  var authors = new Array();
-  req.paginate = new paginate(req);
-  req.db.each(query, req.paginate.perpage + 1, req.paginate.offset, function (err, row) {
-	if (authors.length < req.paginate.perpage)
-		authors.push(row);
-	else
-		req.paginate.hasNext = true;
-  }, function(err) {
-    if (err) console.log(err);
-	res.links(req.paginate.links());
-	res.json(authors);
-  });
+	var qparams = new Array();
+	var query = 'SELECT authors.id as id,name,count(*) as count'+
+		' FROM authors,books_authors_link'+
+		' WHERE authors.id = books_authors_link.author';
+	var initial = req.query.initial;
+	console.log(initial);
+	if (initial) {
+		query+=' AND ';
+		if (initial == '0') {
+			query+=' (substr(authors.sort,1,1) < ? OR substr(authors.sort,1,1) > ?)';
+			qparams.push('A');
+			qparams.push('Z');
+		} else {
+			query+=' UPPER(authors.sort) LIKE ?';
+			qparams.push(req.query.initial.toUpperCase()+'%');
+		}
+	}
+	query+=' GROUP BY books_authors_link.author'+
+		' ORDER BY sort LIMIT ? OFFSET ?';
+	req.paginate = new paginate(req);
+	qparams.push(req.paginate.perpage + 1);
+	qparams.push(req.paginate.offset);
+	var authors = new Array();
+	req.db.each(query, qparams, function (err, row) {
+		if (authors.length < req.paginate.perpage)
+			authors.push(row);
+		else
+			req.paginate.hasNext = true;
+		}, function(err) {
+			if (err) console.log(err);
+			res.links(req.paginate.links());
+			res.json(authors);
+	});
 });
 
 /* Single author */
