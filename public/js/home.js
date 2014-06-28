@@ -9,19 +9,20 @@ $.extend(ItemsCol.prototype,{
 	bind: function() {
 		var self = this;
 		$('#'+this.id) .click(function() {
+			toggleActive(this);
 			home.pagination.page=0;
-			home.pagination.perpage=10;
 			self.load();
 		});
 	},
-	load: function() {
+	load: function(addparam) {
 		var self = this;
-		$.getJSON( this.url, home.pagination, function( data, textStatus, xhr ) {
-			self.data = data;
-			home.current = self;
-			home.update();
-			var linkHeader = xhr.getResponseHeader('link');
-			home.updatePager(parse_link_header(linkHeader));
+		$.getJSON( this.url, $.extend({}, home.pagination, addparam),
+			function( data, textStatus, xhr ) {
+				self.data = data;
+				home.current = self;
+				home.update();
+				var linkHeader = xhr.getResponseHeader('link');
+				home.updatePager(parse_link_header(linkHeader));
 		});
 	},
 	renderRow: function(elt) {
@@ -77,6 +78,11 @@ var HomePage = function() {
 	// bind buttons events
 	$.each([this.books,this.authors,this.series], function(ind, itemsCol) {
 		itemsCol.bind();
+	});
+	$('#recent').click(function() {
+		home.pagination.page=0;
+		home.books.load({sort:'recent'});
+		toggleActive(this);
 	});
 	$(".perpage").click(function() {
 		home.pagination.perpage = $(this).attr("value");
@@ -166,6 +172,13 @@ function link(content, href, glyph) {
 		link+=content+"</a>";
 	}
 	return link;
+}
+/**
+ * Toggle Active buttons.
+ */
+function toggleActive(btn) {
+	$(btn).siblings().removeClass('active');
+	$(btn).addClass('active');
 }
 /*
 * parse_link_header()

@@ -14,7 +14,11 @@ router.get('/', function(req, res) {
 		' LEFT OUTER JOIN books_series_link ON books.id = books_series_link.book' +
 		' LEFT OUTER JOIN series ON series.id = books_series_link.series';
 	query = req.paginate.appendInitialQuery(query,'books.sort',qparams,true);
-	query+= ' ORDER BY books.sort LIMIT ? OFFSET ?';
+	if (req.query.sort == 'recent')
+		query+= ' ORDER BY books.last_modified DESC';
+	else
+		query+= ' ORDER BY books.sort';
+	query+= ' LIMIT ? OFFSET ?';
 	qparams.push(req.paginate.perpage + 1);
 	qparams.push(req.paginate.offset);
 	req.db.each(query, qparams,
