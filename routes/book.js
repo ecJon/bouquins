@@ -5,26 +5,16 @@ var HashMap = require('hashmap').HashMap;
 
 /* All books */
 router.get('/', function(req, res) {
+	var books = new HashMap();
+
+	req.paginate = new paginate(req);
 	var qparams = new Array();
 	var query = 'SELECT books.id as id,title,series_index,name as series_name,series.id AS series_id'+
 		' FROM books' +
 		' LEFT OUTER JOIN books_series_link ON books.id = books_series_link.book' +
 		' LEFT OUTER JOIN series ON series.id = books_series_link.series';
-	var initial = req.query.initial;
-	if (initial) {
-		query+=' WHERE';
-		if (initial == '0') {
-			query+=' substr(books.sort,1,1) < ? OR substr(books.sort,1,1) > ?';
-			qparams.push('A');
-			qparams.push('Z');
-		} else {
-			query+=' UPPER(books.sort) LIKE ?';
-			qparams.push(req.query.initial.toUpperCase()+'%');
-		}
-	}
+	query = req.paginate.appendInitialQuery(query,'books.sort',qparams,true);
 	query+= ' ORDER BY books.sort LIMIT ? OFFSET ?';
-	var books = new HashMap();
-	req.paginate = new paginate(req);
 	qparams.push(req.paginate.perpage + 1);
 	qparams.push(req.paginate.offset);
 	req.db.each(query, qparams,
@@ -49,15 +39,7 @@ router.get('/', function(req, res) {
 				},
 				function(err) {
 					if (err) console.log(err);
-					res.format({
-						html: function(){
-							//TODO load items in home page
-							res.render('home', books.values());
-						},
-						json: function(){
-							res.json(books.values());
-						}
-					});
+					res.json(books.values());
 				}
 			);
 		}

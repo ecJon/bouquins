@@ -5,12 +5,13 @@ block content
     h1= title
     p Naviguez dans la bibliothèque.
     p
-      a#book.btn.btn-primary.btn-lg(role="button") Livres
+      a#book.btn.btn-primary.btn-lg(href="#books",role="button") Livres
       &nbsp;
-      a#author.btn.btn-primary.btn-lg(role="button") Auteurs
+      a#author.btn.btn-primary.btn-lg(href="#authors",role="button") Auteurs
       &nbsp;
-      a#serie.btn.btn-primary.btn-lg(role="button") Series
-  div.container-fluid
+      a#serie.btn.btn-primary.btn-lg(href="#series",role="button") Series
+  div#blkitems.container-fluid.hidden
+    a#itemsanchor
     div.btn-group
       - var initials = '0ABCDEFGHIPQRSTUVWXYZ';
       - for (var i=0;i<initials.length;i++) {

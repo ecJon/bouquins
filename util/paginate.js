@@ -6,6 +6,7 @@ var paginate = function(req) {
   this.offset = this.page * this.perpage;
   this.oUrl = url.parse(req.originalUrl, true);
   this.hasNext = false;
+  this.initial = req.query.initial;
 };
 
 paginate.prototype = {
@@ -23,6 +24,24 @@ paginate.prototype = {
       this.oUrl.query.page = this.page;
 	}
 	return links;
+  },
+  /** Append search clause for initial to query */
+  appendInitialQuery: function(query, column ,qparams, where) {
+	  if (this.initial) {
+		  if(where)
+			  query+=' WHERE';
+		  else
+			  query+=' AND';
+		  if (this.initial == '0') {
+			  query+=' substr('+column+',1,1) < ? OR substr('+column+',1,1) > ?';
+			  qparams.push('A');
+			  qparams.push('Z');
+		  } else {
+			  query+=' UPPER('+column+') LIKE ?';
+			  qparams.push(this.initial.toUpperCase()+'%');
+		  }
+	  }
+	  return query;
   }
 };
 

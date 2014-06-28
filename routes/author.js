@@ -5,29 +5,18 @@ var HashMap = require('hashmap').HashMap;
 
 /* All authors */
 router.get('/', function(req, res) {
+	var authors = new Array();
+	
 	var qparams = new Array();
 	var query = 'SELECT authors.id as id,name,count(*) as count'+
 		' FROM authors,books_authors_link'+
 		' WHERE authors.id = books_authors_link.author';
-	var initial = req.query.initial;
-	console.log(initial);
-	if (initial) {
-		query+=' AND ';
-		if (initial == '0') {
-			query+=' (substr(authors.sort,1,1) < ? OR substr(authors.sort,1,1) > ?)';
-			qparams.push('A');
-			qparams.push('Z');
-		} else {
-			query+=' UPPER(authors.sort) LIKE ?';
-			qparams.push(req.query.initial.toUpperCase()+'%');
-		}
-	}
+	req.paginate = new paginate(req);
+	query = req.paginate.appendInitialQuery(query,'authors.sort',qparams,false);
 	query+=' GROUP BY books_authors_link.author'+
 		' ORDER BY sort LIMIT ? OFFSET ?';
-	req.paginate = new paginate(req);
 	qparams.push(req.paginate.perpage + 1);
 	qparams.push(req.paginate.offset);
-	var authors = new Array();
 	req.db.each(query, qparams, function (err, row) {
 		if (authors.length < req.paginate.perpage)
 			authors.push(row);

@@ -9,7 +9,6 @@ $.extend(ItemsCol.prototype,{
 	bind: function() {
 		var self = this;
 		$('#'+this.id) .click(function() {
-			window.location.hash=self.id;
 			home.pagination.page=0;
 			home.pagination.perpage=10;
 			self.load();
@@ -119,11 +118,16 @@ $.extend(HomePage.prototype,{
 	update: function() {
 		this.table.empty();
 		if (this.current) {
+			$('#itemsanchor').attr('name',this.current.id+'s');
+			$('#blkitems').removeClass('hidden');
 			this.displayHeaders(this.current.headers);
 			var self = this;
 			$.each(this.current.data, function(ind, elt) {
 				self.addRow(elt);
 			});
+		} else {
+			$('#blkitems').addClass('hidden');
+			$('#itemsanchor').attr('name',null);
 		}
 	},
 	updatePager: function(links) {
@@ -146,7 +150,10 @@ $.extend(HomePage.prototype,{
 	},
 });
 var home = new HomePage();
-
+$.each([home.authors,home.books,home.series],function(i,itemsCol) {
+	if (window.location.hash == '#'+itemsCol.id+'s')
+		itemsCol.load();
+});
 
 /**
  * Make link.

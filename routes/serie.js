@@ -5,10 +5,16 @@ var HashMap = require('hashmap').HashMap;
 
 /* All series */
 router.get('/', function(req, res) {
-  var query = 'SELECT series.id as id,name,count(*) as count FROM series,books_series_link WHERE books_series_link.series = series.id GROUP BY books_series_link.series ORDER BY sort LIMIT ? OFFSET ?';
   var series = new HashMap();
+
+  var qparams = new Array();
+  var query = 'SELECT series.id as id,name,count(*) as count FROM series,books_series_link WHERE books_series_link.series = series.id';
   req.paginate = new paginate(req);
-  req.db.each(query, req.paginate.perpage + 1, req.paginate.offset, function (err, row) {
+  query = req.paginate.appendInitialQuery(query,'sort',qparams,false);
+  query+=' GROUP BY books_series_link.series ORDER BY sort LIMIT ? OFFSET ?';
+  qparams.push(req.paginate.perpage + 1);
+  qparams.push(req.paginate.offset);
+  req.db.each(query, qparams, function (err, row) {
 	if (series.count() < req.paginate.perpage)
 		series.set(''+row.id,row);
 	else
