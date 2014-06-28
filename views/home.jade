@@ -2,16 +2,16 @@ extends layout
 
 block content
   div.jumbotron
-    h1= title
-    p Naviguez dans la bibliothèque.
+    h1= t('bouquins.homeTitle')
+    p= t('bouquins.homeGreetings')
     p
-      a#book.btn.btn-primary.btn-lg(href="#books",role="button") Livres
+      a#book.btn.btn-primary.btn-lg(href="#books",role="button")= t('bouquins.books')
       &nbsp;
-      a#author.btn.btn-primary.btn-lg(href="#authors",role="button") Auteurs
+      a#author.btn.btn-primary.btn-lg(href="#authors",role="button")= t('bouquins.authors')
       &nbsp;
-      a#serie.btn.btn-primary.btn-lg(href="#series",role="button") Series
+      a#serie.btn.btn-primary.btn-lg(href="#series",role="button")= t('bouquins.series')
       &nbsp;
-      a#recent.btn.btn-warning.btn-lg(href="#books",role="button") Derniers ajouts
+      a#recent.btn.btn-warning.btn-lg(href="#books",role="button")= t('bouquins.recent')
   div#blkitems.container-fluid.hidden
     a#itemsanchor
     div.btn-group
@@ -21,17 +21,19 @@ block content
         button.btn.btn-default.initial(type="button",value=c)= c
       - }
     ul.pager
-      li.previous.disabled: a.prev Précédent
-      li.next.disabled: a.next Suivant
+      li.previous.disabled: a.prev= t('bouquins.previous')
+      li.next.disabled: a.next= t('bouquins.next')
     table#items.table.table-striped
-      tr: td.disabled Vide
+      tr: td.disabled= t('bouquins.empty')
     ul.pager
-      li.previous.disabled: a.prev Précédent
-      li.next.disabled: a.next Suivant
+      li.previous.disabled: a.prev= t('bouquins.previous')
+      li.next.disabled: a.next= t('bouquins.next')
     div.btn-group.center-block
       each p in [10,20,50,100]
         button.btn.btn-default.perpage(type="button",value=p)= p
-  script(src="js/jquery.min.js")
-  script(src="js/bootstrap.min.js")
-  script(src="js/purl.js")
-  script(src="js/home.js")
+  script
+    | $(function() {
+    |   $.i18n.init().done(function() {
+    |     home = new HomePage();
+    |   });
+    | });

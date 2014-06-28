@@ -35,7 +35,7 @@ $.extend(ItemsCol.prototype,{
 	},
 });
 var HomePage = function() {
-	this.books= new ItemsCol('book', ['Titre', 'Auteur(s)', 'Serie'], [
+	this.books= new ItemsCol('book', [$.t('bouquins.cols.booktitle'), $.t('bouquins.cols.bookauthors'), $.t('bouquins.cols.bookserie')], [
 		function(elt) {
 			return link(elt.title, '/book/'+elt.id, 'glyphicon-book');
 		},
@@ -53,11 +53,11 @@ var HomePage = function() {
 			return link(content, '/serie/'+elt.series_id, 'glyphicon-list');
 		}
 	]);
-	this.authors= new ItemsCol('author', ['Nom', 'Livres'], [
+	this.authors= new ItemsCol('author', [$.t('bouquins.cols.authorname'), $.t('bouquins.cols.authorbooks')], [
 		function(elt){ return link(elt.name, '/author/'+elt.id,'glyphicon-user'); },
 		function(elt) { return elt.count; }
 	]);
-	this.series= new ItemsCol('serie', ['Nom', 'Auteur(s)', 'Livres'], [
+	this.series= new ItemsCol('serie', [$.t('bouquins.cols.seriename'), $.t('bouquins.cols.serieauthors'), $.t('bouquins.cols.seriebooks')], [
 		function(elt) { return link(elt.name, '/serie/'+elt.id, 'glyphicon-list'); },
 		function(elt) {
 			var links='';
@@ -104,6 +104,10 @@ var HomePage = function() {
 		home.pagination.page = 0;
 		if (home.current)
 			home.current.load();
+	});
+	$.each([this.authors,this.books,this.series],function(i,itemsCol) {
+		if (window.location.hash == '#'+itemsCol.id+'s')
+			itemsCol.load();
 	});
 };
 $.extend(HomePage.prototype,{
@@ -155,12 +159,6 @@ $.extend(HomePage.prototype,{
 		});
 	},
 });
-var home = new HomePage();
-$.each([home.authors,home.books,home.series],function(i,itemsCol) {
-	if (window.location.hash == '#'+itemsCol.id+'s')
-		itemsCol.load();
-});
-
 /**
  * Make link.
  */

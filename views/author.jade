@@ -3,9 +3,9 @@ extends layout
 block content
   ol.breadcrumb
     li
-      a(href="/") Home
+      a(href="/")= t('bouquins.nav.home')
     li
-      a(href="/#authors") Auteurs
+      a(href="/#authors")= t('bouquins.nav.authors')
     li.active= title
   div.container
     div.page-header
@@ -14,7 +14,7 @@ block content
         = ' '+name
     h2
       span.glyphicon.glyphicon-book
-      |  Livres
+      = ' '+t('bouquins.author.books')
     ul
       each book in books
         li
@@ -27,14 +27,14 @@ block content
     if series
       h2
         span.glyphicon.glyphicon-list
-        |  Series
+        = ' '+t('bouquins.author.series')
       ul
         each serie in series
           li: a(href='/serie/'+serie.id)= ' '+serie.name
     if coauthors
       h2
         span.glyphicon.glyphicon-user
-        |  Co-Auteur(s)
+        = ' '+t('bouquins.author.coauthors')
       ul
         each author in coauthors
           li: a(href='/author/'+author.id)= author.name

@@ -6,12 +6,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sqlite3 = require('sqlite3').verbose();
 var _ = require('underscore');
+var i18n = require('i18next');
 
 var home = require('./routes/home');
 var author = require('./routes/author');
 var book = require('./routes/book');
 var tag = require('./routes/tag');
 var serie = require('./routes/serie');
+
+i18n.init({
+	saveMissing: false,
+	debug: true
+});
 
 var app = express();
 
@@ -40,7 +46,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use(i18n.handle);
+
+i18n.registerAppHelper(app);
+
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/locales',express.static(path.join(__dirname, 'locales')));
 app.use('/calibre', express.static(app.locals.calibre_path));
 
 app.use('/', home);
