@@ -1,0 +1,57 @@
+extends layout
+
+block content
+  div.jumbotron
+    h1= t('bouquins.homeTitle')
+    p= t('bouquins.homeGreetings')
+    p
+      a#book.btn.btn-primary.btn-lg(href="#books",role="button")= t('bouquins.books')
+      &nbsp;
+      a#author.btn.btn-primary.btn-lg(href="#authors",role="button")= t('bouquins.authors')
+      &nbsp;
+      a#serie.btn.btn-primary.btn-lg(href="#series",role="button")= t('bouquins.series')
+      &nbsp;
+      a#recent.btn.btn-warning.btn-lg(href="#books",role="button")= t('bouquins.recent')
+      &nbsp;
+      a#search.btn.btn-info.btn-lg(href="#",role="button")= t('bouquins.search')
+    div#searchpanel.row.hidden
+      form#searchform(role="form",action="/book",method="post")
+        div.col-md-6(style="margin-bottom:15px")
+          div.panel.panel-info
+            div.panel-body
+              div.input-group
+                input.form-control(type="text",name="q")
+                span.input-group-btn
+                  button.btn.btn-info(type="submit",title=t('bouquins.submitsearch'))
+                    span.glyphicon.glyphicon-search
+  div#blkitems.container-fluid.hidden
+    div.row
+      a#itemsanchor
+      div.btn-group
+        - var initials = '0ABCDEFGHIPQRSTUVWXYZ';
+        - for (var i=0;i<initials.length;i++) {
+        -    var c = initials.charAt(i);
+          button.btn.btn-default.initial(type="button",value=c)= c
+        - }
+    div.row
+      ul.pager
+        li.previous.disabled: a.prev= t('bouquins.previous')
+        li.next.disabled: a.next= t('bouquins.next')
+    div.row
+      table#items.table.table-striped
+        tr: td.disabled= t('bouquins.empty')
+    div.row
+      ul.pager
+        li.previous.disabled: a.prev= t('bouquins.previous')
+        li.next.disabled: a.next= t('bouquins.next')
+    div.row
+      div.btn-group.center-block
+        each p in [10,20,50,100]
+          button.btn.btn-default.perpage(type="button",value=p)= p
+  include footer.jade
+  script
+    | $(function() {
+    |   $.i18n.init().done(function() {
+    |     home = new HomePage();
+    |   });
+    | });

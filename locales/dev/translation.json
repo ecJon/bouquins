@@ -1,0 +1,48 @@
+{
+	"bouquins": {
+		"homeTitle": "Library",
+		"homeGreetings": "Browse library",
+		"authors": "Authors",
+		"books": "Books",
+		"series": "Series",
+		"recent": "Last updates",
+		"search": "Search",
+		"submitsearch": "Search",
+		"previous": "Previous",
+		"next": "Next",
+		"empty": "Empty",
+		"cols": {
+			"booktitle": "Title",
+			"bookauthors": "Author(s)",
+			"bookserie": "Serie",
+			"authorname": "Name",
+			"authorbooks": "Books",
+			"seriename": "Name",
+			"serieauthors": "Author(s)",
+			"seriebooks": "Books"
+		},
+		"nav": {
+			"home": "Home",
+			"books": "Books",
+			"authors": "Authors",
+			"series": "Series"
+		},
+		"book": {
+			"download": "Download",
+			"authors": "Author(s)",
+			"serie": "Serie",
+			"language": "Language",
+			"tags": "Tag(s)",
+			"nocover": "No cover"
+		},
+		"author": {
+			"books": "Books",
+			"series": "Series",
+			"coauthors": "Co-Authors"
+		},
+		"serie": {
+			"books": "Books",
+			"authors": "Authors"
+		}
+	}
+}

@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  ol.breadcrumb
+    li
+      a(href="/")= t('bouquins.nav.home')
+    li
+      a(href="/#series")= t('bouquins.nav.series')
+    li.active= title
+  div.container
+    div.page-header
+      h1
+        span.glyphicon.glyphicon-list
+        = ' '+name
+    h2
+      span.glyphicon.glyphicon-book
+      = ' '+t('bouquins.serie.books')
+    ul
+      each book in books
+        li
+          = book.series_index+'. '
+          a(href='/book/'+book.id)
+            = book.title
+    if authors.length > 0
+      h2
+        span.glyphicon.glyphicon-user
+        = ' '+t('bouquins.serie.authors')
+      ul
+        each author in authors
+          li: a(href='/author/'+author.id)= author.name
+  include footer.jade

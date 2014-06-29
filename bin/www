@@ -1,0 +1,10 @@
+#!/usr/bin/node
+var debug = require('debug')('bouquins');
+var app = require('../bouquins');
+
+app.set('port', process.env.PORT || 3000);
+app.set('hostname', process.env.HOSTNAME || 'localhost');
+
+var server = app.listen(app.get('port'), app.get('hostname'), function() {
+  debug('Express server listening on ' + server.address().hostname + ':' + server.address().port);
+});
