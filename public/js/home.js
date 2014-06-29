@@ -17,13 +17,14 @@ $.extend(ItemsCol.prototype,{
 	load: function(addparam) {
 		var self = this;
 		$.getJSON( this.url, $.extend({}, home.pagination, addparam),
-			function( data, textStatus, xhr ) {
-				self.data = data;
-				home.current = self;
-				home.update();
-				var linkHeader = xhr.getResponseHeader('link');
-				home.updatePager(parse_link_header(linkHeader));
-		});
+			function(data, textStatus, xhr) { self.loadData(data, textStatus, xhr) });
+	},
+	loadData: function(data, textStatus, xhr) {
+		this.data = data;
+		home.current = this;
+		home.update();
+		var linkHeader = xhr.getResponseHeader('link');
+		home.updatePager(parse_link_header(linkHeader));
 	},
 	renderRow: function(elt) {
 		var item = "<tr id='" + elt.id + "'>";
@@ -70,10 +71,7 @@ var HomePage = function() {
 		},
 		function(elt) { return elt.count; }
 	]);
-	this.pagination= {
-		perpage: 10,
-		page: 0,
-	};
+	this.pagination = { perpage: 10, page: 0, };
 	this.table = $('#items');
 	// bind buttons events
 	$.each([this.books,this.authors,this.series], function(ind, itemsCol) {
@@ -83,6 +81,19 @@ var HomePage = function() {
 		home.pagination.page=0;
 		home.books.load({sort:'recent'});
 		toggleActive(this);
+	});
+	$('#search').click(function() {
+		home.pagination.page=0;
+		$('#searchpanel').toggleClass('hidden');
+		toggleActive(this);
+	});
+	$('#searchform').submit(function(evt) {
+		var formurl = $(this).attr('action');
+		formurl+='?'+$.param(home.pagination);
+		$.post(formurl, $(this).serialize(), function(data, textStatus, xhr) {
+			home.books.loadData(data, textStatus, xhr);
+		}, 'json');
+		return false;
 	});
 	$(".perpage").click(function() {
 		home.pagination.perpage = $(this).attr("value");
@@ -149,13 +160,15 @@ $.extend(HomePage.prototype,{
 				btn.parent().addClass('disabled');
 			}
 			btn.unbind();
-			btn.click(function() {
-				var parsed = $.url(links[elt]);
-				var urlp = parsed.param();
-				home.pagination.page = urlp.page;
-				home.pagination.perpage = urlp.perpage;
-				home.current.load();
-			});
+			if (links[elt]) {
+				btn.click(function() {
+					var parsed = $.url(links[elt]);
+					var urlp = parsed.param();
+					home.pagination.page = urlp.page;
+					home.pagination.perpage = urlp.perpage;
+					home.current.load();
+				});
+			}
 		});
 	},
 });
@@ -185,13 +198,13 @@ function toggleActive(btn) {
 * http://developer.github.com/v3/#pagination
 */
 function parse_link_header(header) {
-	if (header.length == 0) {
-		throw new Error("input must not be of zero length");
+	var links = {};
+	if (header == null || header.length == 0) {
+		return links;
 	}
  
 	// Split parts by comma
 	var parts = header.split(',');
-	var links = {};
 	// Parse each part into a named link
 	$.each(parts, function(i, p) {
 		var section = p.split(';');

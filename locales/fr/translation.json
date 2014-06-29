@@ -5,10 +5,12 @@
 		"authors": "Auteurs",
 		"books": "Livres",
 		"series": "Séries",
+		"search": "Recherche",
+		"submitsearch": "Rechercher",
 		"recent": "Derniers ajouts",
 		"previous": "Précédent",
 		"next": "Suivant",
-		"empty": "Vide"
+		"empty": "Vide",
 		"cols": {
 			"booktitle": "Titre",
 			"bookauthors": "Auteur(s)",

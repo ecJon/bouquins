@@ -113,6 +113,7 @@ router.post('/', function(req,res) {
 						qparams.push(id);
 					});
 					query+=')';
+					query = pager.appendInitialQuery(query,'books.sort',qparams,false);
 					return query;
 				},
 				function(books) {
