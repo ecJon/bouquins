@@ -1,0 +1,46 @@
+{
+	"bouquins": {
+		"homeTitle":"Bibliothèque",
+		"homeGreetings":"Naviguez dans la bibliothèque",
+		"authors": "Auteurs",
+		"books": "Livres",
+		"series": "Séries",
+		"recent": "Derniers ajouts",
+		"previous": "Précédent",
+		"next": "Suivant",
+		"empty": "Vide"
+		"cols": {
+			"booktitle": "Titre",
+			"bookauthors": "Auteur(s)",
+			"bookserie": "Série",
+			"authorname": "Nom",
+			"authorbooks": "Livres",
+			"seriename": "Nom",
+			"serieauthors": "Auteur(s)",
+			"seriebooks": "Livres"
+		},
+        "nav": {
+            "home": "Accueil",
+            "books": "Livres",
+			"authors": "Auteurs",
+			"series": "Séries"
+        },
+        "book": {
+            "download": "Télécharger",
+            "authors": "Author(s)",
+            "serie": "Série",
+            "language": "Langue",
+            "tags": "Tag(s)",
+            "nocover": "Pas de couverture"
+        },
+		"author": {
+			"books": "Livres",
+			"series": "Séries",
+			"coauthors": "Co-Auteurs"
+        },
+		"serie": {
+			"books": "Livres",
+			"authors": "Auteurs"
+		}
+	}
+}
