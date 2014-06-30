@@ -14,6 +14,13 @@ It needs a local access to all files in the calibre library (including the sqlit
 
 bouquins is available in french and english.
 
+Screenshots
+-----------
+
+* https://raw.githubusercontent.com/meutel/resources/master/bouquins/screenshots/browse_book.png
+* https://raw.githubusercontent.com/meutel/resources/master/bouquins/screenshots/display_book.png
+* https://raw.githubusercontent.com/meutel/resources/master/bouquins/screenshots/search.png
+
 Usage
 =====
 
