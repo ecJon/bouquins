@@ -1,7 +1,7 @@
 {
 	"name" : "bouquins",
-	"description" : "HTTP frontend for calibre",
-	"url" : "TODO",
+	"description" : "Web frontend for calibre e-book manager",
+	"url" : "https://github.com/meutel/bouquins",
 	"author" : "Meutel <meutel@meutel.net>",
 	"private" : true,
 	"dependencies": {
@@ -20,5 +20,5 @@
 	"scripts": {
 		"start": "node ./bin/www"
 	},
-	"version" : "0.1.0"
+	"version" : "1.0.1"
 }
