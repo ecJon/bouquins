@@ -11,32 +11,32 @@ block content
     div.page-header
       h1
         span.glyphicon.glyphicon-book
-        = ' '+title+' '
+        |  #{title} 
         a.btn.btn-success(href='/calibre/'+path+'/'+data_name+'.'+format.toLowerCase())
           span.glyphicon.glyphicon-download-alt
-          = ' '+t('bouquins.book.download')+' ' + format
+          |  #{t('bouquins.book.download')} #{format}
     div.row
       div.col-md-5
         h2
           span.glyphicon.glyphicon-user
-          = ' '+t('bouquins.book.authors')
+          |  #{t('bouquins.book.authors')}
         ul.list-unstyled
           each author in authors
             li: a(href='/author/'+author.id)= author.name
         if series_name
           h2
             span.glyphicon.glyphicon-list
-            = ' '+t('bouquins.book.serie')
+            |  #{t('bouquins.book.serie')}
           div
-            a(href='/serie/'+series_id)= series_name + ' '
+            a(href='/serie/'+series_id) #{series_name} 
             span.badge= series_index
         h2
           span.glyphicon.glyphicon-globe
-          = ' '+t('bouquins.book.language')
+          |  #{t('bouquins.book.language')}
         div= lang_code
         h2
           span.glyphicon.glyphicon-tags
-          = ' '+t('bouquins.book.tags')
+          |  #{t('bouquins.book.tags')}
         div
           each tag in tags
             span.label.label-info= tag.name

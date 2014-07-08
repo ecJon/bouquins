@@ -11,20 +11,20 @@ block content
     div.page-header
       h1
         span.glyphicon.glyphicon-list
-        = ' '+name
+        |  #{name}
     h2
       span.glyphicon.glyphicon-book
-      = ' '+t('bouquins.serie.books')
+      |  #{t('bouquins.serie.books')}
     ul
       each book in books
         li
-          = book.series_index+'. '
+          | #{book.series_index}. 
           a(href='/book/'+book.id)
             = book.title
     if authors.length > 0
       h2
         span.glyphicon.glyphicon-user
-        = ' '+t('bouquins.serie.authors')
+        |  #{t('bouquins.serie.authors')}
       ul
         each author in authors
           li: a(href='/author/'+author.id)= author.name

@@ -11,30 +11,30 @@ block content
     div.page-header
       h1
         span.glyphicon.glyphicon-user
-        = ' '+name
+        |  #{name}
     h2
       span.glyphicon.glyphicon-book
-      = ' '+t('bouquins.author.books')
+      |  #{t('bouquins.author.books')}
     ul
       each book in books
         li
           a(href='/book/'+book.id)
-            = book.title+' '
+            | #{book.title} 
           if book.serie
             span.glyphicon.glyphicon-list
             a(href='/serie/'+book.serie.id)
-              = ' '+book.serie.name+' ('+book.series_index+')'
+              |  #{book.serie.name} (#{book.series_index})
     if series
       h2
         span.glyphicon.glyphicon-list
-        = ' '+t('bouquins.author.series')
+        |  #{t('bouquins.author.series')}
       ul
         each serie in series
-          li: a(href='/serie/'+serie.id)= ' '+serie.name
+          li: a(href='/serie/'+serie.id)  #{serie.name}
     if coauthors
       h2
         span.glyphicon.glyphicon-user
-        = ' '+t('bouquins.author.coauthors')
+        |  #{t('bouquins.author.coauthors')}
       ul
         each author in coauthors
           li: a(href='/author/'+author.id)= author.name
