@@ -27,6 +27,10 @@ app.set('view engine', 'jade');
 
 // load config
 _.extend(app.locals, require('./config/'+app.get('env')+'.json'));
+var appPackage = require('./package.json');
+app.locals.appname = appPackage.name;
+app.locals.appversion = appPackage.version;
+app.locals.appurl = appPackage.url;
 
 // nginx
 app.enable('trust proxy');

@@ -48,7 +48,6 @@ block content
       div.btn-group.center-block
         each p in [10,20,50,100]
           button.btn.btn-default.perpage(type="button",value=p)= p
-  include footer.jade
   script
     | $(function() {
     |   $.i18n.init().done(function() {
