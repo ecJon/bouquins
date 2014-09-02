@@ -150,12 +150,13 @@ router.post('/', function(req,res) {
 
 /* Single book */
 router.get('/:id', function(req, res) {
-	var book, authors, tags;
-	var queries = 3;
+	var book, authors, tags, details;
+	var queries = 4;
 	var callback = function() {
 		if (queries == 0) {
 			book.authors = authors;
 			book.tags = tags;
+			book.custom = custom;
 			res.format({
 				html: function(){
 					res.render('book', book);
@@ -200,6 +201,18 @@ router.get('/:id', function(req, res) {
 	req.db.each('SELECT tags.id as id,name FROM tags, books_tags_link WHERE books_tags_link.tag = tags.id AND books_tags_link.book = ?', req.params.id,
 		function(err, tag) {
 			tags.push(tag);
+		},
+		function(err) {
+			if (err) console.log('ERR tags: '+err);
+			queries--;
+			callback();
+		}
+	);
+	// details
+	custom = new Array();
+	req.db.each('SELECT publishers.name as pubname FROM publishers, books_publishers_link WHERE books_publishers_link.publisher = publishers.id AND books_publishers_link.book = ?', req.params.id,
+		function(err, publisher) {
+			custom.push({name:'pubname',value:publisher.pubname});
 		},
 		function(err) {
 			if (err) console.log('ERR tags: '+err);
