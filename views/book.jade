@@ -48,11 +48,25 @@ block content
             li
               strong #{t('bouquins.book.detail.pubdate')}
               |  #{new Date(pubdate).getMonth()}-#{new Date(pubdate).getFullYear()}
+          if pubname
+            li
+              strong #{t('bouquins.book.detail.pubname')}
+              |  #{pubname}
           if custom
             each item in custom
               li
-                strong #{t('bouquins.book.detail.'+item.name)}
-                |  #{item.value}
+                if item.label
+                  strong #{item.label}
+                else
+                  strong #{t('bouquins.book.detail.'+item.name)}
+                case item.type
+                  when "bool"
+                    if item.value == 1
+                      span.glyphicon.glyphicon-ok
+                    else
+                      span.glyphicon.glyphicon-remove
+                  default
+                    |  #{item.value}
       div.col-md-7
         if has_cover == 1
           img.img-rounded.img-responsive(src='/calibre/'+path+'/cover.jpg',alt=t('bouquins.book.nocover'))

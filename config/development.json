@@ -1,5 +1,16 @@
 {
 	"calibre_path": "./public/calibre",
 	"calibre_db_path": "./public/calibre/metadata.db",
-	"trust proxy": true
+	"trust proxy": true,
+	"book_details_custom": [
+		{
+			"name": "a_lire",
+			"query": "SELECT custom_columns.name AS label, custom_column_2.value AS value FROM custom_column_2 LEFT OUTER JOIN custom_columns ON custom_columns.id = 2 WHERE custom_column_2.book = ?",
+			"type": "bool"
+		}, {
+			"name": "phy",
+			"query": "SELECT custom_columns.name AS label, custom_column_3.value AS value FROM custom_column_3 LEFT OUTER JOIN custom_columns ON custom_columns.id = 3 WHERE custom_column_3.book = ?",
+			"type": "bool"
+		}
+	]
 }
