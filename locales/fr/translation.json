@@ -33,7 +33,12 @@
             "serie": "Série",
             "language": "Langue",
             "tags": "Tag(s)",
-            "nocover": "Pas de couverture"
+            "nocover": "Pas de couverture",
+            "details": "Détails",
+			"detail": {
+				"pubdate": "Date de publication",
+				"pubname": "Editeur"
+			}
         },
 		"author": {
 			"books": "Livres",

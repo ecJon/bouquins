@@ -150,12 +150,14 @@ router.post('/', function(req,res) {
 
 /* Single book */
 router.get('/:id', function(req, res) {
-	var book, authors, tags;
+	var book, authors, tags, details;
 	var queries = 3;
+	if (req.locals.book_details_custom) queries+=req.locals.book_details_custom.length;
 	var callback = function() {
 		if (queries == 0) {
 			book.authors = authors;
 			book.tags = tags;
+			book.custom = custom;
 			res.format({
 				html: function(){
 					res.render('book', book);
@@ -169,12 +171,14 @@ router.get('/:id', function(req, res) {
 	// book
 	req.db.get('SELECT books.id AS id,title,timestamp,pubdate,series_index,isbn,lccn,path,uuid,has_cover,' +
 		'languages.lang_code,format,uncompressed_size,data.name AS data_name,series.name AS series_name,' +
-		'series.id AS series_id FROM books ' +
+		'series.id AS series_id, publishers.name AS pubname FROM books ' +
 		' LEFT OUTER JOIN books_languages_link ON books_languages_link.book = books.id ' +
 		' LEFT OUTER JOIN languages ON languages.id = books_languages_link.lang_code ' +
 		' LEFT OUTER JOIN data ON data.book = books.id ' +
 		' LEFT OUTER JOIN books_series_link ON books.id = books_series_link.book ' +
 		' LEFT OUTER JOIN series ON series.id = books_series_link.series ' +
+		' LEFT OUTER JOIN books_publishers_link ON books.id = books_publishers_link.book ' +
+		' LEFT OUTER JOIN publishers ON publishers.id = books_publishers_link.publisher ' +
 		' WHERE books.id = ?', req.params.id,
 		function(err, row) {
 			if (err) console.log('ERR book: '+err);
@@ -207,6 +211,24 @@ router.get('/:id', function(req, res) {
 			callback();
 		}
 	);
+	// details
+	custom = new Array();
+	if (req.locals.book_details_custom) {
+		_.each(req.locals.book_details_custom, function(detail) {
+			req.db.each(detail.query, req.params.id,
+				function(err, row) {
+					row.name = detail.name;
+					row.type = detail.type;
+					custom.push(row);
+				},
+				function(err) {
+					if (err) console.log('ERR tags: '+err);
+					queries--;
+					callback();
+				}
+			);
+		});
+	}
 });
 
 

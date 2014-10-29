@@ -42,6 +42,7 @@ var db = new sqlite3.Database(dbPath);
 
 app.use(function(req, res, next) {
 	req.db = db;
+	req.locals = app.locals;
 	next();
 });
 
