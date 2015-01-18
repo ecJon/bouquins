@@ -32,3 +32,6 @@ npm-debug.log
 
 # config files
 config/*
+
+# local symlink
+public/calibre
